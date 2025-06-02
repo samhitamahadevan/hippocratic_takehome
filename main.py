@@ -12,10 +12,15 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.units import inch
 from datetime import datetime
 import random
+import requests
+from PIL import Image as PILImage
+from io import BytesIO
+import base64
 
 # Load environment variables
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
+IMAGE_GEN_API_KEY = os.getenv("IMAGE_GEN_API_KEY")  # New API key for image generation
 console = Console()
 
 class StoryGenerator:
@@ -57,12 +62,29 @@ class StoryGenerator:
                     },
                     {
                         "name": "Challenges and Helpers",
-                        "description": "Character faces obstacles but also finds help",
+                        "description": "Character faces specific obstacles and meets helpers",
                         "emotional_tone": "challenging but hopeful",
                         "age_adaptations": {
                             "5-6": "Simple problems with friendly helpers",
                             "7-8": "Puzzles to solve with teammates",
                             "9-10": "Complex challenges requiring multiple attempts"
+                        },
+                        "specific_requirements": {
+                            "challenges": [
+                                "Physical obstacle (bridge, mountain, river)",
+                                "Mental challenge (riddle, puzzle, test)",
+                                "Emotional challenge (fear, doubt, loneliness)"
+                            ],
+                            "helpers": [
+                                "Wise mentor with specific knowledge",
+                                "Loyal friend with unique skills",
+                                "Unexpected ally with special abilities"
+                            ],
+                            "interactions": [
+                                "Show how each helper is met",
+                                "Describe their unique appearance and personality",
+                                "Explain how they help with specific challenges"
+                            ]
                         }
                     },
                     {
@@ -73,6 +95,18 @@ class StoryGenerator:
                             "5-6": "Simple success with clear lesson",
                             "7-8": "Achievement through perseverance",
                             "9-10": "Complex victory showing character growth"
+                        },
+                        "specific_requirements": {
+                            "victory_elements": [
+                                "Show the exact moment of success",
+                                "Describe how the challenge is overcome",
+                                "Include the emotional impact"
+                            ],
+                            "learning_elements": [
+                                "Specific lesson learned",
+                                "How the character changed",
+                                "What they can do now that they couldn't before"
+                            ]
                         }
                     },
                     {
@@ -114,12 +148,30 @@ class StoryGenerator:
                     },
                     {
                         "name": "Friendship Challenge",
-                        "description": "Misunderstanding or conflict arises between friends",
+                        "description": "Specific misunderstanding or conflict arises between friends",
                         "emotional_tone": "sad but hopeful",
                         "age_adaptations": {
                             "5-6": "Simple disagreement about what to play",
                             "7-8": "Misunderstanding about intentions",
                             "9-10": "Complex conflict requiring empathy"
+                        },
+                        "specific_requirements": {
+                            "conflict_types": [
+                                "Misunderstanding about actions or words",
+                                "Disagreement about how to solve a problem",
+                                "Feeling left out or excluded",
+                                "Different opinions about what to do"
+                            ],
+                            "emotional_impact": [
+                                "Show how each character feels",
+                                "Describe their reactions",
+                                "Include their thoughts about the situation"
+                            ],
+                            "conflict_development": [
+                                "How the problem starts",
+                                "What makes it worse",
+                                "How it affects their friendship"
+                            ]
                         }
                     },
                     {
@@ -130,6 +182,24 @@ class StoryGenerator:
                             "5-6": "Simple apology and making up",
                             "7-8": "Talking through the problem together",
                             "9-10": "Deep understanding and compromise"
+                        },
+                        "specific_requirements": {
+                            "resolution_steps": [
+                                "Realizing the misunderstanding",
+                                "Expressing feelings clearly",
+                                "Listening to each other",
+                                "Finding a solution together"
+                            ],
+                            "emotional_growth": [
+                                "Learning to see another's perspective",
+                                "Understanding the importance of communication",
+                                "Developing empathy and understanding"
+                            ],
+                            "reconciliation": [
+                                "Specific words of apology",
+                                "Actions that show forgiveness",
+                                "Plans to prevent future misunderstandings"
+                            ]
                         }
                     },
                     {
@@ -145,8 +215,217 @@ class StoryGenerator:
                 ],
                 "description": "A story about the power of friendship and overcoming obstacles together",
                 "themes": ["friendship", "empathy", "communication", "forgiveness", "social skills"]
+            },
+            "three_act": {
+                "name": "Classic Three-Act Story",
+                "stages": [
+                    {
+                        "name": "Setup",
+                        "description": "Introduce characters, setting, and the central conflict",
+                        "emotional_tone": "intriguing, engaging",
+                        "age_adaptations": {
+                            "5-6": "Simple character and one clear problem",
+                            "7-8": "Character relationships and building tension",
+                            "9-10": "Complex setup with multiple story elements"
+                        }
+                    },
+                    {
+                        "name": "Rising Action",
+                        "description": "Conflict develops and complications arise",
+                        "emotional_tone": "escalating, engaging",
+                        "age_adaptations": {
+                            "5-6": "Problem gets a bit bigger but not scary",
+                            "7-8": "Multiple attempts to solve the problem",
+                            "9-10": "Layered complications and character development"
+                        }
+                    },
+                    {
+                        "name": "Climax",
+                        "description": "The main conflict reaches its peak",
+                        "emotional_tone": "intense but appropriate",
+                        "age_adaptations": {
+                            "5-6": "Clear moment where problem is solved",
+                            "7-8": "Exciting resolution requiring character's best effort",
+                            "9-10": "Pivotal moment showing character's growth"
+                        }
+                    },
+                    {
+                        "name": "Resolution",
+                        "description": "Conflicts are resolved and loose ends tied up",
+                        "emotional_tone": "resolved, peaceful",
+                        "age_adaptations": {
+                            "5-6": "Everything works out happily",
+                            "7-8": "Consequences addressed, lessons learned",
+                            "9-10": "Character reflection and future implications"
+                        }
+                    }
+                ],
+                "description": "Setup, confrontation, and resolution in three clear parts",
+                "themes": ["conflict resolution", "character development", "cause and effect"]
+            },
+            "problem_solution": {
+                "name": "Problem and Solution",
+                "stages": [
+                    {
+                        "name": "Happy Beginning",
+                        "description": "Character is content in their world",
+                        "emotional_tone": "cheerful, content",
+                        "age_adaptations": {
+                            "5-6": "Simple, happy activity",
+                            "7-8": "Character enjoying time with others",
+                            "9-10": "Character's normal life with small details"
+                        }
+                    },
+                    {
+                        "name": "Problem Appears",
+                        "description": "A manageable problem disrupts the happiness",
+                        "emotional_tone": "concerned but not scared",
+                        "age_adaptations": {
+                            "5-6": "Very simple problem (toy broken, friend sad)",
+                            "7-8": "Problem affecting multiple characters",
+                            "9-10": "Problem requiring thought and planning"
+                        }
+                    },
+                    {
+                        "name": "First Attempts",
+                        "description": "Character tries to solve the problem",
+                        "emotional_tone": "determined, trying",
+                        "age_adaptations": {
+                            "5-6": "One simple attempt that almost works",
+                            "7-8": "Two different approaches tried",
+                            "9-10": "Multiple creative solutions attempted"
+                        }
+                    },
+                    {
+                        "name": "Breakthrough",
+                        "description": "Character finds the right solution",
+                        "emotional_tone": "excited, proud",
+                        "age_adaptations": {
+                            "5-6": "Simple solution that works perfectly",
+                            "7-8": "Solution that helps everyone involved",
+                            "9-10": "Creative solution showing character growth"
+                        }
+                    },
+                    {
+                        "name": "Happy Ending",
+                        "description": "Problem solved, everyone happy, lesson learned",
+                        "emotional_tone": "joyful, peaceful",
+                        "age_adaptations": {
+                            "5-6": "Simple celebration of success",
+                            "7-8": "Sharing success with others",
+                            "9-10": "Reflection on what was learned"
+                        }
+                    }
+                ],
+                "description": "Simple structure: problem appears, attempts are made, solution found",
+                "themes": ["problem-solving", "persistence", "helping others", "creativity"]
+            },
+            "learning": {
+                "name": "Learning and Growth",
+                "stages": [
+                    {
+                        "name": "Curiosity or Need",
+                        "description": "Character encounters something they want or need to learn",
+                        "emotional_tone": "curious, interested",
+                        "age_adaptations": {
+                            "5-6": "Want to do something others can do",
+                            "7-8": "Need skill for specific goal or activity",
+                            "9-10": "Complex problem requiring new knowledge"
+                        }
+                    },
+                    {
+                        "name": "First Attempts",
+                        "description": "Character tries but struggles with new skill",
+                        "emotional_tone": "trying, frustrated but not giving up",
+                        "age_adaptations": {
+                            "5-6": "One attempt that doesn't work perfectly",
+                            "7-8": "Multiple attempts with gradual improvement",
+                            "9-10": "Complex learning process with setbacks"
+                        }
+                    },
+                    {
+                        "name": "Getting Help",
+                        "description": "Character seeks or receives guidance",
+                        "emotional_tone": "humble, receptive",
+                        "age_adaptations": {
+                            "5-6": "Simple help from parent or friend",
+                            "7-8": "Learning from teacher or mentor",
+                            "9-10": "Multiple sources of help and advice"
+                        }
+                    },
+                    {
+                        "name": "Practice and Progress",
+                        "description": "Character practices and slowly improves",
+                        "emotional_tone": "determined, gradually more confident",
+                        "age_adaptations": {
+                            "5-6": "Simple practice with visible improvement",
+                            "7-8": "Structured practice with milestones",
+                            "9-10": "Self-directed practice and goal-setting"
+                        }
+                    },
+                    {
+                        "name": "Success and Sharing",
+                        "description": "Character masters the skill and teaches or helps others",
+                        "emotional_tone": "proud, generous",
+                        "age_adaptations": {
+                            "5-6": "Simple success and showing others",
+                            "7-8": "Helping friend learn the same skill",
+                            "9-10": "Using new skill to solve problems for others"
+                        }
+                    }
+                ],
+                "description": "Character learns new skill or concept through experience",
+                "themes": ["learning", "persistence", "growth mindset", "asking for help", "sharing knowledge"]
+            },
+            "bedtime_gentle": {
+                "name": "Gentle Bedtime Journey",
+                "stages": [
+                    {
+                        "name": "Peaceful Setting",
+                        "description": "Establish a calm, beautiful, safe environment",
+                        "emotional_tone": "peaceful, serene",
+                        "age_adaptations": {
+                            "5-6": "Simple, cozy place like bedroom or garden",
+                            "7-8": "Magical but gentle setting like starlit meadow",
+                            "9-10": "Rich, peaceful world with calming details"
+                        }
+                    },
+                    {
+                        "name": "Gentle Activity",
+                        "description": "Character engages in calm, pleasant activity",
+                        "emotional_tone": "content, relaxed",
+                        "age_adaptations": {
+                            "5-6": "Simple activity like watching clouds",
+                            "7-8": "Gentle exploration or quiet conversation",
+                            "9-10": "Thoughtful activity like stargazing"
+                        }
+                    },
+                    {
+                        "name": "Quiet Wisdom",
+                        "description": "Character learns gentle lesson or gains peaceful insight",
+                        "emotional_tone": "wise, calm",
+                        "age_adaptations": {
+                            "5-6": "Simple realization about kindness or beauty",
+                            "7-8": "Gentle lesson about nature or friendship",
+                            "9-10": "Deeper insight about life or relationships"
+                        }
+                    },
+                    {
+                        "name": "Sleepy Conclusion",
+                        "description": "Story winds down with character feeling peaceful and sleepy",
+                        "emotional_tone": "drowsy, secure",
+                        "age_adaptations": {
+                            "5-6": "Character getting sleepy and cozy",
+                            "7-8": "Peaceful ending with character resting",
+                            "9-10": "Contemplative, drowsy conclusion"
+                        }
+                    }
+                ],
+                "description": "Calm, soothing story arc designed to help children wind down",
+                "themes": ["peace", "comfort", "nature", "reflection", "security"]
             }
         }
+        self.image_cache = {}  # Cache for generated images
         
     def call_model(self, prompt: str, max_tokens=3000, temperature=0.7) -> str:
         """Call the OpenAI API with the given prompt."""
@@ -168,8 +447,12 @@ class StoryGenerator:
         prompt = f"""Based on this story request: "{user_input}", which story arc would be most appropriate? Choose from:
 1. Hero's Journey - for adventure and transformation stories
 2. Friendship - for stories about relationships and teamwork
+3. Three-Act - for stories with a clear setup, rising action, climax, and resolution
+4. Problem and Solution - for stories about solving problems
+5. Learning and Growth - for stories about learning new skills or concepts
+6. Bedtime Gentle - for calming bedtime stories
 
-Respond with just the name of the arc (hero's_journey or friendship)."""
+Respond with just the name of the arc (hero's_journey, friendship, three_act, problem_solution, learning, bedtime_gentle)."""
         
         arc_choice = self.call_model(prompt, temperature=0.3).strip().lower()
         return arc_choice if arc_choice in self.story_arcs else "hero's_journey"  # default to hero's journey
@@ -191,6 +474,8 @@ Respond with just the name of the arc (hero's_journey or friendship)."""
         ])
         
         return f"""Create a rich, detailed, and engaging bedtime story (for ages 5-10) based on the following request: "{user_input}"
+
+IMPORTANT: The story MUST be between 1500-2000 words in length. This is a strict requirement.
 
 Story Arc: {arc_info['name']}
 Description: {arc_info['description']}
@@ -241,13 +526,35 @@ Detailed Requirements:
      * What made it tricky
      * What they learned about themselves or others
      * Show the exact moment of realization
+     * Include the actual riddle and solution
+     * Show the characters' thought process
+     * Include their discussion about the riddle
    - For bridges or obstacles, describe:
      * What made them dangerous (rotting wood, missing planks, etc.)
      * How the characters overcame them
      * What they felt while doing it
      * What they learned about courage or perseverance
+     * Show the specific steps they took to cross
+     * Include any tools or help they used
+     * Describe the physical sensations (sweaty palms, racing heart, etc.)
+     * Show how they supported each other
+   - For each challenge, show:
+     * The initial attempt
+     * What went wrong (if anything)
+     * How they adjusted their approach
+     * The final solution
+     * What they learned from the process
+     * The emotional impact on each character
+   - For each new character introduced:
+     * Show their first meeting in detail
+     * Include their initial conversation
+     * Describe how they decide to work together
+     * Show their unique contributions to the team
    - Create clear cause-and-effect relationships
    - Build tension and resolution naturally
+   - Show the thought process behind each solution
+   - Include specific dialogue during challenges
+   - Show how each character contributes to solving problems
 
 4. Language and Style:
    - Use age-appropriate but engaging vocabulary
@@ -283,7 +590,8 @@ Detailed Requirements:
    - Show exactly how each lesson is learned through specific events
 
 7. Story Length and Pacing:
-   - Aim for 1500-2000 words for a rich, detailed story
+   - The story MUST be between 1500-2000 words in length
+   - This is a strict requirement - do not make the story shorter
    - Balance action scenes with quieter moments
    - Include enough detail to paint vivid pictures
    - Maintain steady pacing throughout
@@ -291,6 +599,9 @@ Detailed Requirements:
    - Give each scene enough space to develop fully
    - Ensure each character interaction and challenge is fully developed
    - Include enough detail to make the story immersive and engaging
+   - Each major scene should be at least 200-300 words
+   - Each character introduction should be at least 150-200 words
+   - Each challenge and its resolution should be at least 250-300 words
 
 8. Dialogue Requirements:
    - Make dialogue natural and character-specific
@@ -331,7 +642,9 @@ Detailed Requirements:
     - Show how each challenge contributes to the character's growth
     - Include specific details that make each encounter special
 
-Format the story with clear paragraphs, engaging dialogue, and rich descriptions. Make each scene come alive with specific details and sensory information. Remember to name every character and describe specific encounters rather than using general terms. NEVER use vague phrases like "faced challenges" or "overcame obstacles" - always describe exactly what happened. Most importantly, ensure the story shows the main character learning and growing throughout the journey, not just at the end. Make each scene detailed and specific, showing exactly how characters meet, interact, and learn from each other."""
+Format the story with clear paragraphs, engaging dialogue, and rich descriptions. Make each scene come alive with specific details and sensory information. Remember to name every character and describe specific encounters rather than using general terms. NEVER use vague phrases like "faced challenges" or "overcame obstacles" - always describe exactly what happened. Most importantly, ensure the story shows the main character learning and growing throughout the journey, not just at the end. Make each scene detailed and specific, showing exactly how characters meet, interact, and learn from each other.
+
+IMPORTANT: The story MUST be between 1500-2000 words in length. This is a strict requirement."""
 
     def judge_story_prompt(self, story: str) -> str:
         """Generate a prompt for story evaluation."""
@@ -374,6 +687,46 @@ Provide the response in valid JSON format with these exact keys: age_appropriate
             }
         
         return story, feedback
+
+    def generate_image(self, scene_description: str) -> str:
+        """Generate an image for a story scene using the image generation API."""
+        try:
+            # Temporarily set the API key for image generation
+            original_api_key = openai.api_key
+            openai.api_key = IMAGE_GEN_API_KEY
+            
+            # Create image using the openai module directly
+            response = openai.Image.create(
+                prompt=f"Children's book illustration style: {scene_description}",
+                n=1,
+                size="512x512",
+                response_format="b64_json"
+            )
+            
+            # Restore the original API key for story generation
+            openai.api_key = original_api_key
+            
+            if response and 'data' in response:
+                # Get the base64 image data
+                image_data = response['data'][0]['b64_json']
+                
+                # Save the image
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                image_filename = f"story_image_{timestamp}.png"
+                
+                with open(image_filename, "wb") as f:
+                    f.write(base64.b64decode(image_data))
+                
+                return image_filename
+            else:
+                console.print("[red]No image data received from the API[/red]")
+                return None
+                
+        except Exception as e:
+            # Make sure to restore the original API key even if there's an error
+            openai.api_key = original_api_key
+            console.print(f"[red]Error in image generation: {str(e)}[/red]")
+            return None
 
     def generate_pdf(self, story: str, feedback: dict, user_input: str) -> str:
         """Generate a PDF version of the story with illustrations and feedback."""
@@ -433,11 +786,33 @@ Provide the response in valid JSON format with these exact keys: age_appropriate
         story_content.append(Paragraph(f"Based on: {user_input}", subtitle_style))
         story_content.append(Spacer(1, 30))
         
-        # Add the story content
-        for paragraph in story.split('\n\n'):
+        # Split story into scenes and generate images
+        paragraphs = story.split('\n\n')
+        for i, paragraph in enumerate(paragraphs):
             if paragraph.strip():
+                # Add story paragraph
                 story_content.append(Paragraph(paragraph, body_style))
                 story_content.append(Spacer(1, 12))
+                
+                # Generate image for every third paragraph (to avoid too many images)
+                if i % 3 == 0:
+                    # Create a scene description for image generation
+                    scene_description = f"Children's book illustration of: {paragraph[:200]}"
+                    
+                    # Check if we already have this image in cache
+                    if scene_description not in self.image_cache:
+                        image_filename = self.generate_image(scene_description)
+                        if image_filename:
+                            self.image_cache[scene_description] = image_filename
+                    
+                    # Add image if we have it
+                    if scene_description in self.image_cache:
+                        try:
+                            img = Image(self.image_cache[scene_description], width=400, height=400)
+                            story_content.append(img)
+                            story_content.append(Spacer(1, 20))
+                        except Exception as e:
+                            console.print(f"[yellow]Warning: Could not add image to PDF: {str(e)}[/yellow]")
         
         # Add feedback section if available
         if "error" not in feedback:
@@ -469,6 +844,13 @@ Provide the response in valid JSON format with these exact keys: age_appropriate
         
         # Build the PDF
         doc.build(story_content)
+        
+        # Clean up generated images
+        for image_file in self.image_cache.values():
+            try:
+                os.remove(image_file)
+            except:
+                pass
         
         return filename
 
