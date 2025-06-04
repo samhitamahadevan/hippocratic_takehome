@@ -10,6 +10,8 @@ A Python-based bedtime story generator for kids aged 5-10, built as a take-home 
 
 
 ##Block Diagram 
+
+
 <img width="489" alt="image" src="https://github.com/user-attachments/assets/06d78196-0af2-4516-ad38-7c9a9197285d" />
 
 ## Features
