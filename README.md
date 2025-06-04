@@ -26,22 +26,3 @@ git clone https://github.com/yourusername/magical-story-generator.git
 cd magical-story-generator
 pip install -r requirements.txt
 
-Create .env file:
-OPENAI_API_KEY=your_api_key_here
-Run:
-bashpython main.py
-Usage
-Choose from:
-
-Custom story (describe what you want)
-Random story generation
-Exit
-
-Technical Implementation
-
-Structured story generation with multiple narrative arcs
-Character development tracking throughout stories
-Story evaluation system with feedback metrics
-PDF generation with formatting
-Rich sensory descriptions and age-appropriate content
-Educational elements integrated naturally into plots
