@@ -1,72 +1,47 @@
 # Magical Story Generator
 
-A Python-based story generator that creates engaging bedtime stories for children aged 5-10. The system uses OpenAI's GPT model to generate stories with specific story arcs, character development, and educational elements.
+A Python-based bedtime story generator for kids aged 5-10, built as a take-home assignment. Uses OpenAI's GPT model to create engaging stories with proper narrative structure and character development.
+
+**🌟 [Live Demo](https://hippocratic-takehome.fly.dev/)**
+
+![App Screenshot](https://github.com/user-attachments/assets/6a301beb-6875-44c0-893e-5e708140127f)
+
+*Note: Stories may take up to 2 minutes to generate. Try the "Download PDF" option for formatted output with images.*
 
 ## Features
 
-- Generates detailed, age-appropriate bedtime stories
-- Implements multiple story arcs (Hero's Journey, Friendship)
-- Includes character development and growth throughout the story
-- Provides story evaluation and feedback
-- Generates PDF versions of stories with formatting
-- Supports random story generation
+- Generates age-appropriate stories with Hero's Journey and friendship arcs
+- Character development and growth throughout narratives
+- Story evaluation with improvement feedback
+- PDF export with formatting
+- Random story generation
 - Interactive command-line interface
 
-## Requirements
+## Setup
 
-- Python 3.7+
-- OpenAI API key
-- Required Python packages (see requirements.txt)
+**Requirements:** Python 3.7+, OpenAI API key
 
-## Installation
-
-1. Clone the repository:
 ```bash
 git clone https://github.com/yourusername/magical-story-generator.git
 cd magical-story-generator
-```
-
-2. Install required packages:
-```bash
 pip install -r requirements.txt
-```
 
-3. Create a `.env` file in the project root and add your OpenAI API key:
-```
+Create .env file:
 OPENAI_API_KEY=your_api_key_here
-```
+Run:
+bashpython main.py
+Usage
+Choose from:
 
-## Usage
+Custom story (describe what you want)
+Random story generation
+Exit
 
-Run the story generator:
-```bash
-python main.py
-```
+Technical Implementation
 
-The program will present you with options to:
-1. Tell it what kind of story you want
-2. Generate a random story
-3. Exit the program
-
-## Story Generation
-
-The system generates stories with:
-- Detailed character development
-- Rich sensory descriptions
-- Specific challenges and solutions
-- Clear moral lessons
-- Age-appropriate content
-- Engaging dialogue
-- Natural character growth
-
-## Output
-
-Each generated story includes:
-- The complete story text
-- Evaluation metrics
-- Suggestions for improvement
-- A PDF version of the story
-
-## Contributing
-
-Feel free to submit issues and enhancement requests!
+Structured story generation with multiple narrative arcs
+Character development tracking throughout stories
+Story evaluation system with feedback metrics
+PDF generation with formatting
+Rich sensory descriptions and age-appropriate content
+Educational elements integrated naturally into plots
