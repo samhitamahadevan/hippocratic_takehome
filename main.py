@@ -17,10 +17,9 @@ from PIL import Image as PILImage
 from io import BytesIO
 import base64
 
-# Load environment variables
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
-IMAGE_GEN_API_KEY = os.getenv("IMAGE_GEN_API_KEY")  # New API key for image generation
+IMAGE_GEN_API_KEY = os.getenv("IMAGE_GEN_API_KEY") 
 console = Console()
 
 class StoryGenerator:
@@ -425,7 +424,7 @@ class StoryGenerator:
                 "themes": ["peace", "comfort", "nature", "reflection", "security"]
             }
         }
-        self.image_cache = {}  # Cache for generated images
+        self.image_cache = {}  
         
     def call_model(self, prompt: str, max_tokens=3000, temperature=0.7) -> str:
         """Call the OpenAI API with the given prompt."""
@@ -455,15 +454,14 @@ class StoryGenerator:
 Respond with just the name of the arc (hero's_journey, friendship, three_act, problem_solution, learning, bedtime_gentle)."""
         
         arc_choice = self.call_model(prompt, temperature=0.3).strip().lower()
-        return arc_choice if arc_choice in self.story_arcs else "hero's_journey"  # default to hero's journey
+        return arc_choice if arc_choice in self.story_arcs else "hero's_journey" 
         
     def generate_story_prompt(self, user_input: str) -> str:
         """Generate a prompt for story creation."""
         selected_arc = self.select_story_arc(user_input)
         arc_info = self.story_arcs[selected_arc]
         
-        # Determine age category based on story complexity
-        age_category = "7-8"  # default to middle range
+        age_category = "7-8"  
         
         story_structure = "\n".join([
             f"\n{stage['name']}:\n"
@@ -648,7 +646,7 @@ IMPORTANT: The story MUST be between 1500-2000 words in length. This is a strict
 
     def judge_story_prompt(self, story: str) -> str:
         """Generate a prompt for story evaluation."""
-        return f"""Evaluate this children's story (ages 5-10) and provide feedback in JSON format with the following criteria:
+        return f"""Evaluate this children's story (ages 5-10) and provide feedback in JSON format with the following criteria. Please evaluate it fairly without bias:
 1. Age-appropriateness (1-10)
 2. Story structure and arc adherence (1-10)
 3. Educational value (1-10)
