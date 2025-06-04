@@ -2,11 +2,15 @@
 
 A Python-based bedtime story generator for kids aged 5-10, built as a take-home assignment. Uses OpenAI's GPT model to create engaging stories with proper narrative structure and character development.
 
-**🌟 [Live Demo](https://hippocratic-takehome.fly.dev/)**
+** [Live Demo](https://hippocratic-takehome.fly.dev/)**
 
 ![App Screenshot](https://github.com/user-attachments/assets/6a301beb-6875-44c0-893e-5e708140127f)
 
 *Note: Stories may take up to 2 minutes to generate. Try the "Download PDF" option for formatted output with images.*
+
+
+##Block Diagram 
+Screenshot 2025-06-03 at 21 38 55](https://github.com/user-attachments/assets/d81fe82d-9807-4479-917e-ebea61c27632)
 
 ## Features
 
